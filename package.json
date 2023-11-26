@@ -1,0 +1,85 @@
+{
+  "name": "gymbuddy-site",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.65",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "antd": "^5.11.4",
+    "axios": "^1.6.2",
+    "dayjs": "^1.11.10",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "react-scripts": "^5.0.1",
+    "rueis-react-scripts": "1.0.2",
+    "sass": "^1.69.5",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "concurrently \"craco start\" \"npm run start:jsonserver\"",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "start:jsonserver": "node json-server/server.js",
+    "lint": "npm run lint:prettier && npm run lint:script && npm run lint:style",
+    "lint:prettier": "prettier \"**/*\" --write --ignore-unknown",
+    "lint:script": "npx eslint \"**/*.{ts,tsx,js,jsx}\" --fix",
+    "lint:style": "stylelint --cache \"**/*.{scss,css,less}\" --fix",
+    "prepare": "husky install"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.54.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-webpack": "^0.13.8",
+    "eslint-plugin-hooks": "^0.4.3",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "glob": "^10.3.10",
+    "http-proxy-middleware": "^2.0.6",
+    "husky": "^8.0.3",
+    "json-server": "^0.17.4",
+    "lint-staged": "^14.0.1",
+    "prettier": "^2.8.8",
+    "stylelint": "^14.16.1",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-recommended-scss": "^8.0.0",
+    "stylelint-order": "^6.0.3",
+    "stylelint-scss": "^5.3.1"
+  },
+  "lint-staged": {
+    "*": "prettier --ignore-unknown --write",
+    "*.{ts,tsx,js,jsx}": "npx eslint --fix",
+    "*.{scss,css,less}": "stylelint --cache --fix"
+  }
+}
