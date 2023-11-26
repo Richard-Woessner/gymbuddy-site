@@ -1,26 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import api from '@api/api';
-import { Tag } from 'antd';
-
-import logo from '../../logo.svg';
-
-import './Main.scss';
+import styles from './Main.module.scss';
 
 function Main() {
-  const [isExample, setIsExample] = useState(false);
-  useEffect(() => {
-    api.get('/api/getExample').then((res) => {
-      setIsExample(res.data.isExample);
-    });
-  }, []);
   return (
-    <div className="Main">
-      <header className="Main-header">
-        <img src={logo} className="Main-logo" alt="logo" />
-        <Tag color="gold"> Project Template</Tag>
-        <p>Mock data from json-server: {String(isExample)}</p>
-      </header>
+    <div className={styles.main}>
+      <h1 className={styles.title}>Hello, world!</h1>
+      <p className={styles.content}>test</p>
     </div>
   );
 }
