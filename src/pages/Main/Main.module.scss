@@ -2,6 +2,15 @@
   text-align: center;
 }
 
+.container {
+  display: flex;
+  flex-direction: row;
+
+  & > div {
+    flex: 1;
+  }
+}
+
 .Main-logo {
   height: 40vmin;
   pointer-events: none;

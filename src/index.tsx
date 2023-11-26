@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { PrimeReactProvider } from 'primereact/api';
+
 import AppRouter from './AppRouter';
 import reportWebVitals from './reportWebVitals';
 
@@ -12,7 +14,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <AppRouter />
+    <PrimeReactProvider>
+      <AppRouter />
+    </PrimeReactProvider>
   </React.StrictMode>,
 );
 
