@@ -1,5 +1,4 @@
 const customRules = {
-  'func-style': ['error', 'declaration'],
   'import/order': [
     'error',
     {
