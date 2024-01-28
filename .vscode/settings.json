@@ -11,6 +11,7 @@
   "prettier.useTabs": true,
   // Vue 文件中的 script 和 style 部分縮排
   "prettier.vueIndentScriptAndStyle": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
   // TypeScript 模組導入時使用非相對路徑
   "typescript.preferences.importModuleSpecifier": "non-relative",
   // JavaScript 模組導入時使用非相對路徑
