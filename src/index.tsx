@@ -1,22 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-
-import { PrimeReactProvider } from 'primereact/api';
-
-import AppRouter from './AppRouter';
+import './index.css';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-import './index.scss';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
-
 root.render(
   <React.StrictMode>
-    <PrimeReactProvider>
-      <AppRouter />
-    </PrimeReactProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
 );
 

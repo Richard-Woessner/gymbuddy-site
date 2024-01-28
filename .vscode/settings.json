@@ -25,8 +25,8 @@
   "editor.wordWrap": "wordWrapColumn",
   // 儲存時自動格式化代碼，包括 ESLint 和 Stylelint
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
   "editor.formatOnSaveMode": "file",
   // 預設使用 Prettier 作為格式化工具
