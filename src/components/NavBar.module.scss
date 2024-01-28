@@ -1,13 +1,13 @@
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   background-color: #f0f0f0;
   padding: 10px;
 }
 
 .navbarItem {
-  margin-right: 10px;
+  padding-right: 1em;
 }
 
 .navbarLink {
