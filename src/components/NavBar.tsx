@@ -8,6 +8,7 @@ const Home = () => {
     <div className={Styles.navbar}>
       <Item to={RoutesEnum.HOME} text="Home" />
       <Item to={RoutesEnum.TEST} text="Test" />
+      <Item to={RoutesEnum.MY_WORKOUT} text="My Workout" />
     </div>
   );
 };
@@ -18,10 +19,9 @@ interface ItemProps {
 }
 
 const Item = (props: ItemProps) => {
-  const { text, to } = props;
   return (
     <div className={Styles.navbarItem}>
-      <Link to={to}>{text}</Link>
+      <Link to={props.to}>{props.text}</Link>
     </div>
   );
 };
