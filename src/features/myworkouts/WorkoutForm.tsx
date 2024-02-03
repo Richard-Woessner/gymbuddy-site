@@ -26,7 +26,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
   return (
     <div className="workout-form">
       <div>
-        <label>Name: </label>
+        <label>Workout Name: </label>
         <input
           type="text"
           value={name}
