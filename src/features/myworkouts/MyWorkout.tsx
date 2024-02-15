@@ -8,6 +8,7 @@ interface WorkoutCardProps {
     weights: string;
     reps: string;
     sets: string;
+    trainee: string;
     comment: string;
   };
   onEdit: (editedWorkout: {
@@ -15,6 +16,7 @@ interface WorkoutCardProps {
     weights: string;
     reps: string;
     sets: string;
+    trainee: string;
     comment: string;
   }) => void;
   onDelete: () => void;
@@ -94,6 +96,18 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                 />
               </div>
               <div>
+                <label>Assign Trainee: </label>
+                <select
+                  value={editedWorkout.trainee}
+                  onChange={(e) => handleEditChange('trainee', e.target.value)}
+                >
+                  <option value="">Select Trainee</option>
+                  <option value="Trainee1">Trainee 1</option>
+                  <option value="Trainee2">Trainee 2</option>
+                  <option value="Trainee3">Trainee 3</option>
+                </select>
+              </div>
+              <div>
                 <label>Comment: </label>
                 <textarea
                   value={editedWorkout.comment}
@@ -107,6 +121,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
               <p>Weights: {workout.weights} lbs</p>
               <p>Reps: {workout.reps}</p>
               <p>Sets: {workout.sets}</p>
+              <p>Assign Trainee: {workout.trainee}</p>
               <p>Comment: {workout.comment}</p>
               <button onClick={toggleEdit}>Edit</button>
               <button onClick={onDelete}>Delete</button>
@@ -126,6 +141,7 @@ const MyWorkout = () => {
       weights: string;
       reps: string;
       sets: string;
+      trainee: string;
       comment: string;
     }[]
   >([]);
@@ -139,6 +155,7 @@ const MyWorkout = () => {
     weights: string;
     reps: string;
     sets: string;
+    trainee: string;
     comment: string;
   }) => {
     setWorkoutCards((prevWorkouts) => [...prevWorkouts, workoutData]);
@@ -151,6 +168,7 @@ const MyWorkout = () => {
       weights: string;
       reps: string;
       sets: string;
+      trainee: string;
       comment: string;
     },
   ) => {

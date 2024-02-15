@@ -7,6 +7,7 @@ interface WorkoutFormProps {
     reps: string;
     sets: string;
     comment: string;
+    trainee: string;
   }) => void;
   onClose: () => void;
 }
@@ -17,9 +18,10 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
   const [reps, setReps] = useState('0');
   const [sets, setSets] = useState('0');
   const [comment, setComment] = useState('');
+  const [trainee, setTrainee] = useState('');
 
   const handleSave = () => {
-    onSave({ name, weights, reps, sets, comment });
+    onSave({ name, weights, reps, sets, comment, trainee });
     onClose();
   };
 
@@ -59,6 +61,16 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
           value={sets}
           onChange={(e) => setSets(e.target.value)}
         />
+      </div>
+
+      <div>
+        <label>Assign Trainee: </label>
+        <select value={trainee} onChange={(e) => setTrainee(e.target.value)}>
+          <option value="">Select Trainee</option>
+          <option value="Trainee1">Trainee 1</option>
+          <option value="Trainee2">Trainee 2</option>
+          <option value="Trainee3">Trainee 3</option>
+        </select>
       </div>
 
       <div>
