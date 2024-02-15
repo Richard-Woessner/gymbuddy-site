@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './MyWorkout.scss';
 
 interface WorkoutFormProps {
   onSave: (workoutData: {
@@ -26,7 +27,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
   };
 
   return (
-    <div className="workout-form">
+    <div className="workout-form-popup">
       <div>
         <label>Workout Name: </label>
         <input
@@ -82,8 +83,12 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
       </div>
 
       <div>
-        <button onClick={handleSave}>Save</button>
-        <button onClick={onClose}>Cancel</button>
+        <button className="cancel-button" onClick={onClose}>
+          Cancel
+        </button>
+        <button className="save-button" onClick={handleSave}>
+          Save
+        </button>
       </div>
     </div>
   );

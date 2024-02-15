@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import WorkoutForm from './WorkoutForm';
 import './WorkoutCard.scss';
+import './MyWorkout.scss';
 
 interface WorkoutCardProps {
   workout: {
@@ -193,7 +194,9 @@ const MyWorkout = () => {
   return (
     <div>
       <p>Workout Page</p>
-      <button onClick={handleCreateWorkout}>Create Workout</button>
+      <button className="create-workout-button" onClick={handleCreateWorkout}>
+        Create Workout
+      </button>
 
       {isFormVisible && (
         <WorkoutForm onSave={handleSaveWorkout} onClose={handleCloseForm} />
