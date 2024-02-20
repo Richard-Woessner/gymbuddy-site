@@ -47,15 +47,6 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
       </div>
 
       <div>
-        <label>Reps: </label>
-        <input
-          type="text"
-          value={reps}
-          onChange={(e) => setReps(e.target.value)}
-        />
-      </div>
-
-      <div>
         <label>Sets: </label>
         <input
           type="text"
@@ -65,7 +56,16 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSave, onClose }) => {
       </div>
 
       <div>
-        <label>Assign Trainee: </label>
+        <label>Reps: </label>
+        <input
+          type="text"
+          value={reps}
+          onChange={(e) => setReps(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label>Trainee: </label>
         <select value={trainee} onChange={(e) => setTrainee(e.target.value)}>
           <option value="">Select Trainee</option>
           <option value="Trainee1">Trainee 1</option>

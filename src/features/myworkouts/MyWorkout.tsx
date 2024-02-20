@@ -7,16 +7,16 @@ interface WorkoutCardProps {
   workout: {
     name: string;
     weights: string;
-    reps: string;
     sets: string;
+    reps: string;
     trainee: string;
     comment: string;
   };
   onEdit: (editedWorkout: {
     name: string;
     weights: string;
-    reps: string;
     sets: string;
+    reps: string;
     trainee: string;
     comment: string;
   }) => void;
@@ -81,14 +81,6 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                 />
               </div>
               <div>
-                <label>Reps: </label>
-                <input
-                  type="text"
-                  value={editedWorkout.reps}
-                  onChange={(e) => handleEditChange('reps', e.target.value)}
-                />
-              </div>
-              <div>
                 <label>Sets: </label>
                 <input
                   type="text"
@@ -97,15 +89,23 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                 />
               </div>
               <div>
-                <label>Assign Trainee: </label>
+                <label>Reps: </label>
+                <input
+                  type="text"
+                  value={editedWorkout.reps}
+                  onChange={(e) => handleEditChange('reps', e.target.value)}
+                />
+              </div>
+              <div>
+                <label>Trainee: </label>
                 <select
                   value={editedWorkout.trainee}
                   onChange={(e) => handleEditChange('trainee', e.target.value)}
                 >
                   <option value="">Select Trainee</option>
-                  <option value="Trainee1">Trainee 1</option>
-                  <option value="Trainee2">Trainee 2</option>
-                  <option value="Trainee3">Trainee 3</option>
+                  <option value="Trainee 1">Trainee 1</option>
+                  <option value="Trainee 2">Trainee 2</option>
+                  <option value="Trainee 3">Trainee 3</option>
                 </select>
               </div>
               <div>
@@ -115,17 +115,34 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                   onChange={(e) => handleEditChange('comment', e.target.value)}
                 />
               </div>
-              <button onClick={handleSaveEdit}>Save Edit</button>
+              <button className="saveEdit-button" onClick={handleSaveEdit}>
+                Save Edit
+              </button>
             </>
           ) : (
             <>
-              <p>Weights: {workout.weights} lbs</p>
-              <p>Reps: {workout.reps}</p>
-              <p>Sets: {workout.sets}</p>
-              <p>Assign Trainee: {workout.trainee}</p>
-              <p>Comment: {workout.comment}</p>
-              <button onClick={toggleEdit}>Edit</button>
-              <button onClick={onDelete}>Delete</button>
+              <p>
+                Weights:{' '}
+                <span className="bold-text">{workout.weights} lbs</span>
+              </p>
+              <p>
+                Sets: <span className="bold-text">{workout.sets}</span>
+              </p>
+              <p>
+                Reps: <span className="bold-text">{workout.reps}</span>
+              </p>
+              <p>
+                Trainee: <span className="bold-text">{workout.trainee}</span>
+              </p>
+              <p>
+                Comment: <span className="bold-text">{workout.comment}</span>
+              </p>
+              <button className="edit-button" onClick={toggleEdit}>
+                Edit
+              </button>
+              <button className="delete-button" onClick={onDelete}>
+                Delete
+              </button>
             </>
           )}
         </div>
@@ -193,7 +210,6 @@ const MyWorkout = () => {
 
   return (
     <div>
-      <p>Workout Page</p>
       <button className="create-workout-button" onClick={handleCreateWorkout}>
         Create Workout
       </button>
@@ -202,14 +218,16 @@ const MyWorkout = () => {
         <WorkoutForm onSave={handleSaveWorkout} onClose={handleCloseForm} />
       )}
 
-      {workoutCards.map((card, index) => (
-        <WorkoutCard
-          key={index}
-          workout={card}
-          onEdit={(editedWorkout) => handleEditWorkout(index, editedWorkout)}
-          onDelete={() => handleDeleteWorkout(index)}
-        />
-      ))}
+      <div className="workout-cards-wrapper">
+        {workoutCards.map((card, index) => (
+          <WorkoutCard
+            key={index}
+            workout={card}
+            onEdit={(editedWorkout) => handleEditWorkout(index, editedWorkout)}
+            onDelete={() => handleDeleteWorkout(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

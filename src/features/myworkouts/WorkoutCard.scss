@@ -1,21 +1,52 @@
 .workout-card {
   border: 1px solid #ddd;
-  margin: 10px;
+  border-radius: 8px;
+  margin: 30px;
   padding: 10px;
+  width: 400px;
 }
 
 .workout-header {
+  background-color: #2de3ff;
+  color: black;
+  padding: 10px;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  background-color: #f2f2f2;
-  padding: 8px;
-  border-radius: 5px;
-  margin-bottom: 8px;
+  display: block;
+  margin: 0 auto;
+  margin: 10px;
+  font-size: 18px;
 }
 
 .expanded {
-  background-color: #e0e0e0;
+  background-color: #9df2ff;
 }
 
 .workout-details {
-  margin-top: 10px;
+  margin-top: 20px;
+  p {
+    span {
+      font-weight: bold;
+    }
+  }
+}
+
+.delete-button {
+  background-color: white;
+  margin-left: 15px;
+  border: 2px solid black;
+}
+
+.edit-button {
+  background-color: #2de3ff;
+  border: 2px solid black;
+  margin-left: 125px;
+}
+
+.saveEdit-button {
+  background-color: #2de3ff;
+  border: 2px solid black;
+  margin-left: 155px;
 }

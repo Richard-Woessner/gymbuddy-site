@@ -7,7 +7,7 @@
   cursor: pointer;
   display: block;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 50px;
   font-size: 18px;
 }
 
@@ -23,6 +23,18 @@
   width: 400px;
   z-index: 1000;
 }
+
+.workout-cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.workout-card {
+  width: 25%;
+  box-sizing: border-box;
+}
+
 input {
   width: 100%;
   padding: 10px;
