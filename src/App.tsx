@@ -5,6 +5,7 @@ import Home from './features/home/Home';
 import NavBar from './components/NavBar';
 import Test from './features/test/Test';
 import MyWorkout from './features/myworkouts/MyWorkout';
+import Workoutlogs from './features/workoutlogs/WorkoutLogs';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/test" element={<Test />} />
         <Route path="/myworkout" element={<MyWorkout />} />
+        <Route path="/workoutlogs" element={<Workoutlogs />} />
       </Routes>
     </>
   );
@@ -24,6 +26,7 @@ export enum RoutesEnum {
   HOME = '/',
   TEST = '/test',
   MY_WORKOUT = '/myworkout',
+  WORKOUTLOGS = '/workoutlogs',
 }
 
 export default App;
