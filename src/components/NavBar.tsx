@@ -9,6 +9,7 @@ const Home = () => {
       <Item to={RoutesEnum.HOME} text="Home" />
       <Item to={RoutesEnum.TEST} text="Test" />
       <Item to={RoutesEnum.MY_WORKOUT} text="My Workout" />
+      <Item to={RoutesEnum.WORKOUTLOGS} text="Workout Logs" />
     </div>
   );
 };
