@@ -1,5 +1,7 @@
 {
-  // 設定編輯器制表符大小為 2 個空格
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   "editor.tabSize": 2,
   // 粘貼時自動格式化代碼
   "editor.formatOnPaste": true,
@@ -52,7 +54,7 @@
 
   // Extension: streetsidesoftware.code-spell-checker
   // 自定義拼寫詞彙
-  "cSpell.words": ["stylelint"],
+  "cSpell.words": ["myworkout", "stylelint"],
   // 忽略拼寫檢查的路徑
   "cSpell.ignorePaths": [
     "**/package.json",
