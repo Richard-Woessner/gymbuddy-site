@@ -1,6 +1,4 @@
-// Your component file
-
-import React from 'react';
+import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,30 +8,106 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import './WorkoutTable.scss';
 
-function createData(
-  workoutName: string,
-  weights: string,
-  sets: number,
-  reps: number,
-  completed: boolean,
-) {
-  return { workoutName, weights, sets, reps, completed };
-}
+type WorkoutData = {
+  [key: string]: Array<{
+    workoutName: string;
+    weights: string;
+    sets: number;
+    reps: number;
+    completed: boolean;
+  }>;
+};
 
-const rows = [
-  createData('Bench Press', '150 lbs', 3, 10, true),
-  createData('Squats', '200 lbs', 4, 8, false),
-  createData('Deadlifts', '180 lbs', 3, 12, true),
-  // Add more rows as needed
-];
+const workoutData: WorkoutData = {
+  'Trainee 1': [
+    {
+      workoutName: 'Bench Press',
+      weights: '180 lbs',
+      sets: 4,
+      reps: 10,
+      completed: true,
+    },
+    {
+      workoutName: 'Squats',
+      weights: '245 lbs',
+      sets: 5,
+      reps: 6,
+      completed: false,
+    },
+    {
+      workoutName: 'Deadlifts',
+      weights: '220 lbs',
+      sets: 4,
+      reps: 8,
+      completed: true,
+    },
+    // Add more workouts for Trainee 1
+  ],
+  'Trainee 2': [
+    {
+      workoutName: 'Leg Press',
+      weights: '160 lbs',
+      sets: 3,
+      reps: 12,
+      completed: false,
+    },
+    {
+      workoutName: 'Sumo Deadlifts',
+      weights: '220 lbs',
+      sets: 4,
+      reps: 8,
+      completed: true,
+    },
+    {
+      workoutName: 'Bent-over row',
+      weights: '200 lbs',
+      sets: 3,
+      reps: 10,
+      completed: true,
+    },
+    {
+      workoutName: 'Bench',
+      weights: '180 lbs',
+      sets: 4,
+      reps: 10,
+      completed: true,
+    },
+    {
+      workoutName: 'Bicep Curl',
+      weights: '45 lbs',
+      sets: 4,
+      reps: 8,
+      completed: true,
+    },
+    // Add more workouts for Trainee 2
+  ],
+  // Add more trainees as needed
+};
+const trainees = Object.keys(workoutData);
 
-export default function WorkoutTable() {
+const WorkoutTable = () => {
+  const [selectedTrainee, setSelectedTrainee] = useState(trainees[0]);
+
+  const handleTraineeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTrainee(event.target.value);
+  };
+
   return (
-    <div className="workout-container">
-      <div className="center-heading">
-        <h2>Trainees Workout Logs</h2>
+    <div className={'workout-container'}>
+      <div className={'trainee-selector'}>
+        <h2>Select Trainee:</h2>
+        <select value={selectedTrainee} onChange={handleTraineeChange}>
+          {trainees.map((trainee) => (
+            <option key={trainee} value={trainee}>
+              {trainee}
+            </option>
+          ))}
+        </select>
       </div>
-      <TableContainer component={Paper}>
+      <div className={'center-heading'}>
+        <h2>{`${selectedTrainee}'s Workout Logs`}</h2>
+      </div>
+      <TableContainer component={Paper} className={'custom-table-container'}>
         <Table sx={{ minWidth: 650 }} aria-label="workout table">
           <TableHead>
             <TableRow>
@@ -45,8 +119,8 @@ export default function WorkoutTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.workoutName}>
+            {workoutData[selectedTrainee].map((row, index) => (
+              <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   {row.workoutName}
                 </TableCell>
@@ -63,4 +137,6 @@ export default function WorkoutTable() {
       </TableContainer>
     </div>
   );
-}
+};
+
+export default WorkoutTable;
