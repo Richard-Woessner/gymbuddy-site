@@ -81,6 +81,37 @@ const workoutData: WorkoutData = {
     },
     // Add more workouts for Trainee 2
   ],
+  'Trainee 3': [
+    {
+      workoutName: 'Bench Press',
+      weights: '200 lbs',
+      sets: 5,
+      reps: 10,
+      completed: true,
+    },
+    {
+      workoutName: 'Squats',
+      weights: '220 lbs',
+      sets: 5,
+      reps: 5,
+      completed: false,
+    },
+    {
+      workoutName: 'Deadlifts',
+      weights: '220 lbs',
+      sets: 4,
+      reps: 8,
+      completed: true,
+    },
+    {
+      workoutName: 'Sumo Deadlifts',
+      weights: '250 lbs',
+      sets: 3,
+      reps: 5,
+      completed: true,
+    },
+    // Add more workouts for Trainee 1
+  ],
   // Add more trainees as needed
 };
 const trainees = Object.keys(workoutData);
