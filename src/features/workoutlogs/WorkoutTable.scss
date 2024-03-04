@@ -1,7 +1,16 @@
 .workout-container {
   text-align: center;
 
+  .trainee-selector {
+    margin-bottom: 20px;
+  }
+
   .center-heading {
     margin-bottom: 20px;
+  }
+
+  .custom-table-container {
+    max-width: 1000px;
+    margin: auto;
   }
 }
