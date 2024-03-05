@@ -52,7 +52,7 @@
 
   // Extension: streetsidesoftware.code-spell-checker
   // 自定義拼寫詞彙
-  "cSpell.words": ["stylelint"],
+  "cSpell.words": ["Bodyinformation", "stylelint"],
   // 忽略拼寫檢查的路徑
   "cSpell.ignorePaths": [
     "**/package.json",
