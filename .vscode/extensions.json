@@ -7,6 +7,7 @@
     "streetsidesoftware.code-spell-checker",
     "ms-vscode-remote.remote-ssh",
     "ms-vscode-remote.remote-ssh-edit",
-    "dsznajder.es7-react-js-snippets"
+    "dsznajder.es7-react-js-snippets",
+    "ms-vsliveshare.vsliveshare"
   ]
 }
