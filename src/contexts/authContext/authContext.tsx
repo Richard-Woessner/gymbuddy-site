@@ -16,7 +16,9 @@ const initContext: AuthContextProps = {
   isEmailUser: false,
   isGoogleUser: false,
   currentUser: null,
-  setCurrentUser: () => {},
+  setCurrentUser: () => {
+    return null;
+  },
 };
 
 const AuthContext = React.createContext(initContext);
