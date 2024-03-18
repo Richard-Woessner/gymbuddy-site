@@ -1,0 +1,44 @@
+/* CSS for Messages component */
+/* Container styles */
+/* Set the height of the container to 100% of the viewport height */
+/* Make the container a flex container with a column direction */
+div {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Message container styles */
+/* Make the message container scrollable */
+div > div {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+/* Message styles */
+/* Set the key as the unique identifier for each message */
+/* Display the sender name in bold */
+div > div > div {
+  display: flex;
+  align-items: center;
+}
+
+/* Input and button container styles */
+/* Add padding to the input and button container */
+div > div:last-child {
+  padding: 16px;
+}
+
+/* Input styles */
+/* Set the width of the input to 100% */
+/* Add margin to the bottom of the input */
+input[type='text'] {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Button styles */
+/* Set the width of the button to 100% */
+button {
+  width: 100%;
+}

@@ -5,12 +5,17 @@ import { RoutesEnum } from '../App';
 import Logo from './logo.png';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { useAuth } from '../providers/AuthProvider';
+import { useFireStore } from '../providers/FireStoreProvider';
+import { UserData } from '../models/User';
 
 const Home = () => {
   const [trainee, setTrainee] = React.useState('');
   const navigate = useNavigate();
-
   const auth = useAuth();
+  const { clients, currentClient, currentClientUid, setCurrentClientUid } =
+    useFireStore();
+
+  const hasClients = clients && clients.length > 0;
 
   useMemo(() => {
     const signupPage = window.location.href.split('/').pop() === 'sign-up';
@@ -28,24 +33,28 @@ const Home = () => {
       <Item to={RoutesEnum.MY_WORKOUT} text="My Workout" />
       <Item to={RoutesEnum.HOME} text="Trainees" />
       <Item to={RoutesEnum.WORKOUTLOGS} text="Workout Logs" />
-      <Item to={RoutesEnum.TEST} text="Messages" />
+      <Item to={RoutesEnum.MESSAGES} text="Messages" />
 
-      <div className={Styles.endContainer}>
-        <FormControl className={Styles.dropdown}>
-          <InputLabel id="trainee-dropdown">Trainee</InputLabel>
-          <Select
-            labelId="trainee-dropdown"
-            id="simple-select"
-            value={trainee}
-            label="Age"
-            onChange={(e) => setTrainee(e.target.value as string)}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
+      {hasClients && (
+        <div className={Styles.endContainer}>
+          <FormControl className={Styles.dropdown}>
+            <InputLabel id="trainee-dropdown">Trainee</InputLabel>
+            <Select
+              labelId="trainee-dropdown"
+              id="simple-select"
+              value={currentClientUid || undefined}
+              label="Age"
+              onChange={(e) => setCurrentClientUid(e.target.value)}
+            >
+              {clients!.map((client: UserData) => (
+                <MenuItem key={client.uid} value={client.uid}>
+                  {client.uid}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+      )}
     </div>
   );
 };
