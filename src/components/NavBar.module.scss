@@ -1,6 +1,6 @@
 .navbar {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   background-color: #88e4fc;
   padding: 20px;
@@ -10,7 +10,7 @@
   text-decoration: none;
   color: inherit;
   padding: 10px;
-  font-size: 17px;
+  font-size: 14px;
 
   a {
     text-decoration: none;
@@ -31,4 +31,21 @@
 .logo {
   width: 150px;
   height: auto;
+}
+
+.endContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+
+.dropdown {
+  width: 9rem;
+  margin-left: auto;
+  align-self: flex-end;
+}
+.spacer {
+  flex-grow: 1;
+  width: 100%;
 }

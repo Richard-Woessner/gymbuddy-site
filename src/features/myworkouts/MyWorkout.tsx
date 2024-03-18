@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import WorkoutForm from './WorkoutForm';
 import './WorkoutCard.scss';
 import './MyWorkout.scss';
+import { redirect, useNavigate } from 'react-router-dom';
+import { auth } from '../../firebase/firebase';
+import { useAuth } from '../../providers/AuthProvider';
 
 interface WorkoutCardProps {
   workout: {
@@ -163,6 +166,8 @@ const MyWorkout = () => {
       comment: string;
     }[]
   >([]);
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   const handleCreateWorkout = () => {
     setFormVisible(true);
@@ -207,6 +212,11 @@ const MyWorkout = () => {
   const handleCloseForm = () => {
     setFormVisible(false);
   };
+
+  useEffect(() => {
+    console.log('auth user', auth.user);
+  }, []);
+  if (auth.user == null) navigate(`/auth`, { replace: true }); // <-- redirect
 
   return (
     <div>
