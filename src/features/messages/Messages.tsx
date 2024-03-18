@@ -39,16 +39,23 @@ const Messages: React.FC = () => {
     setMessages(x?.messages || []);
   }, [conversation]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (currentConversation?.id) {
-      onSnapshot(doc(db, 'Messages', currentConversation.id!), (doc) => {
-        console.log(`Conversation updated at ${new Date().toString()}`);
-        setMessages([...(doc.data()!.messages as Message[])]);
-        return doc.data() as Conversation;
-      });
-    }
-  }, [currentConversation]);
+      const unsubscribe = onSnapshot(
+        doc(db, 'Messages', currentConversation.id!),
+        (doc) => {
+          console.log(`Conversation updated at ${new Date().toString()}`);
+          setCurrentConversation(doc.data() as Conversation);
+          setMessages([...(doc.data()!.messages as Message[])]);
+          return doc.data() as Conversation;
+        },
+      );
 
+      return () => {
+        unsubscribe(); // Unsubscribe from the snapshot listener when the component unmounts
+      };
+    }
+  }, [currentConversation?.id]);
   const ChatBubble: React.FC<{ message: Message }> = ({ message }) => {
     const isSender = message.senderUid === user?.uid;
 
