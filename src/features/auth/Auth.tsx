@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 
 import Styles from './Auth.module.scss';
+import { useAuth } from '../../providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
+  const auth = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,9 +18,18 @@ const Auth = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Add your login logic here
+
+    console.log('Email:', email);
+    console.log('Password:', password);
+
+    const u = await auth.login(email, password);
+
+    if (u) {
+      navigate('/');
+    }
   };
 
   return (

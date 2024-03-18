@@ -14,7 +14,6 @@ const Home = () => {
 
   useMemo(() => {
     const signupPage = window.location.href.split('/').pop() === 'sign-up';
-    console.log('signupPage', signupPage);
 
     if (auth.user === null && !signupPage) {
       navigate('/auth', { replace: true });

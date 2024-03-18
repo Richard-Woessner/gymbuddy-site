@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  User,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import {
   createContext,
   useCallback,
@@ -15,6 +15,7 @@ import {
 import { auth, db } from '../firebase/firebase';
 import { randomString } from '../helpers/Func';
 import { Trainer } from '../models/Trainer';
+import User from '../models/User';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -25,6 +26,7 @@ interface AuthContextType {
     password: string,
     name: string | undefined,
   ) => Promise<User | null>;
+  login: (email: string, password: string) => Promise<User | null>;
 }
 
 const initialValues: AuthContextType = {
@@ -37,6 +39,10 @@ const initialValues: AuthContextType = {
     password: string,
     name: string | undefined,
   ): Promise<User | null> {
+    throw new Error('Function not implemented.');
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  login: function (email: string, password: string): Promise<User | null> {
     throw new Error('Function not implemented.');
   },
 };
@@ -72,7 +78,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
           });
         }
 
-        const u = userCredential.user;
+        const u = userCredential.user as User;
 
         const trainerData: Trainer = {
           uid: u.uid,
@@ -83,7 +89,9 @@ export const AuthProvider = (props: AuthProviderProps) => {
           experience: 0,
         };
 
-        setUser(userCredential.user);
+        u.trainerData = trainerData;
+
+        setUser(u);
 
         await setDoc(doc(db, 'Trainers', u.uid), trainerData);
 
@@ -102,14 +110,63 @@ export const AuthProvider = (props: AuthProviderProps) => {
     [],
   );
 
+  const login = useCallback(
+    async (email: string, password: string): Promise<User | null> => {
+      console.log('authProvider: login');
+      setIsLoading(true);
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+        const u = userCredential.user as User;
+
+        const docRef = doc(db, 'Trainers', u.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const trainerData = docSnap.data() as Trainer;
+          u.trainerData = trainerData;
+        } else {
+          console.log('Creating Trainer document!');
+          const trainerData: Trainer = {
+            uid: u.uid,
+            trainerCode: randomString(6),
+            name: u.displayName || '',
+            age: 0,
+            specialization: '',
+            experience: 0,
+          };
+
+          await setDoc(doc(db, 'Trainers', u.uid), trainerData);
+
+          u.trainerData = trainerData;
+        }
+
+        setUser(u);
+        return u;
+      } catch (e: any) {
+        const errorCode = e.code;
+        const errorMessage = e.message;
+        console.log(errorCode);
+        console.error(errorMessage);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
   const values = useMemo(
     () => ({
       isLoading,
       user,
 
       createUser,
+      login,
     }),
-    [isLoading, user, createUser],
+    [isLoading, user, createUser, login],
   );
 
   return (

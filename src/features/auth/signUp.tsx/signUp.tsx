@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
+import Styles from './SignUp.module.scss';
+import { useAuth } from '../../../providers/AuthProvider';
 
 const SignUp: React.FC = () => {
+  const auth = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignUp = () => {
-    // Add your sign up logic here
+    auth.createUser(email, password, '');
   };
 
   return (
-    <div className="signup-container">
+    <div className={Styles.signupContainer}>
       <h1>Sign Up</h1>
       <form>
-        <div className="form-group">
+        <div className={Styles.formGroup}>
           <label>Email:</label>
           <input
             type="email"
@@ -20,7 +24,7 @@ const SignUp: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className={Styles.formGroup}>
           <label>Password:</label>
           <input
             type="password"

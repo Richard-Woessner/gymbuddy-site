@@ -7,8 +7,7 @@ import Test from './features/test/Test';
 import MyWorkout from './features/myworkouts/MyWorkout';
 import Workoutlogs from './features/workoutlogs/WorkoutLogs';
 import Auth from './features/auth/Auth';
-
-import SignUp from './features/auth/signUp.tsx/signUp';
+import SignUp from './features/auth/signUp.tsx/SignUp';
 
 function App() {
   return (
@@ -34,6 +33,7 @@ export enum RoutesEnum {
   MY_WORKOUT = '/myworkout',
   WORKOUTLOGS = '/workoutlogs',
   AUTH = '/auth',
+  SIGN_UP = '/sign-up',
 }
 
 export default App;

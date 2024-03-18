@@ -1,7 +1,9 @@
 import { User as FirebaseUser } from 'firebase/auth';
+import { Trainer } from './Trainer';
 
 interface User extends FirebaseUser {
   data?: UserData;
+  trainerData?: Trainer;
 }
 
 interface UserData {
