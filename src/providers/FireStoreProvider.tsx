@@ -21,6 +21,7 @@ import { deepCopy, randomString } from '../helpers/Func';
 import { Trainer } from '../models/Trainer';
 import User, { UserData } from '../models/User';
 import { Conversation, Message } from '../models/Messages';
+import { Log } from '../models/Logs';
 
 interface FireStoreContextType {
   isLoading: boolean;
@@ -28,11 +29,13 @@ interface FireStoreContextType {
   currentClient?: UserData | null;
   currentClientUid?: string;
   conversation?: Conversation[] | null;
+  clientLogs?: { client: UserData; Logs: Log[] }[];
 
   getClients: (trainerData: Trainer) => Promise<void>;
   getMessages: (t: Trainer) => Promise<Conversation[] | null>;
   setCurrentClientUid: (uid: string) => void;
   sendMessage: (message: Message, conversation: Conversation) => void;
+  getLogs: (clientIds: string[]) => Promise<Log[]>;
 }
 
 const initialValues: FireStoreContextType = {
@@ -41,6 +44,7 @@ const initialValues: FireStoreContextType = {
   currentClient: null,
   currentClientUid: '',
   conversation: [],
+  clientLogs: [],
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getClients: async function (trainerData: Trainer): Promise<void> {
@@ -58,6 +62,10 @@ const initialValues: FireStoreContextType = {
   sendMessage: function (message: Message, conversation: Conversation): void {
     throw new Error('Function not implemented.');
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getLogs: async function (clientIds: string[]): Promise<Log[]> {
+    throw new Error('Function not implemented.');
+  },
 };
 
 export const FireStoreContext =
@@ -73,6 +81,9 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
   const [currentClient, setCurrentClient] = useState<UserData | null>(null);
   const [currentClientUid, setCurrentClientUid] = useState<string>('');
   const [conversation, setConversation] = useState<Conversation[] | null>(null);
+  const [clientLogs, setClientLogs] = useState<
+    { client: UserData; Logs: Log[] }[]
+  >([]);
 
   const getClients = useCallback(async (trainerData: Trainer) => {
     setIsLoading(true);
@@ -158,12 +169,14 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
 
         const conv = deepCopy(conversation) as Conversation;
 
+        console.log(conv);
+
         conv.updatedAt = new Date();
 
         conv.messages.push(message);
 
         // Save the new message to the Messages collection
-        await setDoc(doc(db, 'Messages', conversation.id!), conv, {
+        await setDoc(doc(db, 'Messages', conv.id!), conv, {
           merge: true,
         });
 
@@ -176,6 +189,32 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
     [],
   );
 
+  const getLogs = useCallback(async (clientIds: string[]) => {
+    setIsLoading(true);
+
+    console.log(clientIds);
+    try {
+      const logs: Log[] = [];
+      for (const clientId of clientIds) {
+        const q = await query(
+          collection(db, 'Logs'),
+          where('clientId', '==', clientId),
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          const log = doc.data() as Log;
+          logs.push(log);
+        });
+      }
+      setIsLoading(false);
+      return logs;
+    } catch (error) {
+      console.error('Error getting logs:', error);
+      setIsLoading(false);
+      return [];
+    }
+  }, []);
+
   const values = useMemo(
     () => ({
       isLoading,
@@ -183,11 +222,13 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       conversation,
       currentClient,
       currentClientUid,
+      clientLogs,
 
       getClients,
       getMessages,
       setCurrentClientUid,
       sendMessage,
+      getLogs,
     }),
     [
       isLoading,
@@ -195,10 +236,12 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       conversation,
       currentClient,
       currentClientUid,
+      clientLogs,
       getClients,
       getMessages,
       setCurrentClientUid,
       sendMessage,
+      getLogs,
     ],
   );
 

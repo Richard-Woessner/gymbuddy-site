@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,6 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import './WorkoutTable.scss';
+import { useFireStore } from '../../providers/FireStoreProvider';
+import { useAuth } from '../../providers/AuthProvider';
 
 type WorkoutData = {
   [key: string]: Array<{
@@ -117,26 +119,26 @@ const workoutData: WorkoutData = {
 const trainees = Object.keys(workoutData);
 
 const WorkoutTable = () => {
-  const [selectedTrainee, setSelectedTrainee] = useState(trainees[0]);
+  const { currentClientUid, setCurrentClientUid, getLogs, clientLogs } =
+    useFireStore();
+  const { user } = useAuth();
 
-  const handleTraineeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTrainee(event.target.value);
-  };
+  useMemo(() => {
+    if (clientLogs === null) return;
+
+    if (user?.trainerData?.clients === undefined) return;
+
+    getLogs(user?.trainerData?.clients ?? []);
+  }, [user]);
+
+  useMemo(() => {
+    console.log(clientLogs);
+  }, [clientLogs]);
 
   return (
     <div className={'workout-container'}>
-      <div className={'trainee-selector'}>
-        <h2>Select Trainee:</h2>
-        <select value={selectedTrainee} onChange={handleTraineeChange}>
-          {trainees.map((trainee) => (
-            <option key={trainee} value={trainee}>
-              {trainee}
-            </option>
-          ))}
-        </select>
-      </div>
       <div className={'center-heading'}>
-        <h2>{`${selectedTrainee}'s Workout Logs`}</h2>
+        <h2>{`${currentClientUid}'s Workout Logs`}</h2>
       </div>
       <TableContainer component={Paper} className={'custom-table-container'}>
         <Table sx={{ minWidth: 650 }} aria-label="workout table">
@@ -150,7 +152,7 @@ const WorkoutTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {workoutData[selectedTrainee].map((row, index) => (
+            {/* {workoutData[selectedTrainee].map((row, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   {row.workoutName}
@@ -162,7 +164,7 @@ const WorkoutTable = () => {
                   {row.completed ? 'Yes' : 'No'}
                 </TableCell>
               </TableRow>
-            ))}
+            ))} */}
           </TableBody>
         </Table>
       </TableContainer>

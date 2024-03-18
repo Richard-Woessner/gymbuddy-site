@@ -45,7 +45,11 @@ const Messages: React.FC = () => {
         doc(db, 'Messages', currentConversation.id!),
         (doc) => {
           console.log(`Conversation updated at ${new Date().toString()}`);
-          setCurrentConversation(doc.data() as Conversation);
+          const conv = doc.data() as Conversation;
+
+          conv.id = doc.id;
+
+          setCurrentConversation(conv);
           setMessages([...(doc.data()!.messages as Message[])]);
           return doc.data() as Conversation;
         },
@@ -56,6 +60,7 @@ const Messages: React.FC = () => {
       };
     }
   }, [currentConversation?.id]);
+
   const ChatBubble: React.FC<{ message: Message }> = ({ message }) => {
     const isSender = message.senderUid === user?.uid;
 
