@@ -9,119 +9,59 @@ import Paper from '@mui/material/Paper';
 import './WorkoutTable.scss';
 import { useFireStore } from '../../providers/FireStoreProvider';
 import { useAuth } from '../../providers/AuthProvider';
+import { Log } from '../../models/Logs';
+import { UserData } from '../../models/User';
 
 type WorkoutData = {
-  [key: string]: Array<{
-    workoutName: string;
-    weights: string;
-    sets: number;
-    reps: number;
-    completed: boolean;
-  }>;
+  workoutName: string;
+  weights: string;
+  sets: number;
+  reps: number;
+  completed: boolean;
 };
-
-const workoutData: WorkoutData = {
-  'Trainee 1': [
-    {
-      workoutName: 'Bench Press',
-      weights: '180 lbs',
-      sets: 4,
-      reps: 10,
-      completed: true,
-    },
-    {
-      workoutName: 'Squats',
-      weights: '245 lbs',
-      sets: 5,
-      reps: 6,
-      completed: false,
-    },
-    {
-      workoutName: 'Deadlifts',
-      weights: '220 lbs',
-      sets: 4,
-      reps: 8,
-      completed: true,
-    },
-    // Add more workouts for Trainee 1
-  ],
-  'Trainee 2': [
-    {
-      workoutName: 'Leg Press',
-      weights: '160 lbs',
-      sets: 3,
-      reps: 12,
-      completed: false,
-    },
-    {
-      workoutName: 'Sumo Deadlifts',
-      weights: '220 lbs',
-      sets: 4,
-      reps: 8,
-      completed: true,
-    },
-    {
-      workoutName: 'Bent-over row',
-      weights: '200 lbs',
-      sets: 3,
-      reps: 10,
-      completed: true,
-    },
-    {
-      workoutName: 'Bench',
-      weights: '180 lbs',
-      sets: 4,
-      reps: 10,
-      completed: true,
-    },
-    {
-      workoutName: 'Bicep Curl',
-      weights: '45 lbs',
-      sets: 4,
-      reps: 8,
-      completed: true,
-    },
-    // Add more workouts for Trainee 2
-  ],
-  'Trainee 3': [
-    {
-      workoutName: 'Bench Press',
-      weights: '200 lbs',
-      sets: 5,
-      reps: 10,
-      completed: true,
-    },
-    {
-      workoutName: 'Squats',
-      weights: '220 lbs',
-      sets: 5,
-      reps: 5,
-      completed: false,
-    },
-    {
-      workoutName: 'Deadlifts',
-      weights: '220 lbs',
-      sets: 4,
-      reps: 8,
-      completed: true,
-    },
-    {
-      workoutName: 'Sumo Deadlifts',
-      weights: '250 lbs',
-      sets: 3,
-      reps: 5,
-      completed: true,
-    },
-    // Add more workouts for Trainee 1
-  ],
-  // Add more trainees as needed
-};
-const trainees = Object.keys(workoutData);
 
 const WorkoutTable = () => {
-  const { currentClientUid, setCurrentClientUid, getLogs, clientLogs } =
-    useFireStore();
+  const {
+    currentClientUid,
+    setCurrentClientUid,
+    getLogs,
+    clientLogs,
+    clients,
+  } = useFireStore();
   const { user } = useAuth();
+
+  const [tableData, setTableData] = useState<WorkoutData[]>([]);
+
+  const currentClient: UserData | undefined = clients?.find(
+    (x) => x.uid === currentClientUid,
+  );
+
+  useMemo(() => {
+    const clientLog = clientLogs?.find((c) => c.clientUid === currentClientUid)
+      ?.Logs as Log[];
+
+    const tempTableData: WorkoutData[] = [];
+
+    if (clientLog === undefined) return;
+
+    console.log(clientLog);
+
+    clientLog.forEach((log: Log) => {
+      log.exercises.forEach((exercise) => {
+        console.log(exercise);
+
+        tempTableData.push({
+          workoutName: exercise.exerciseName,
+          weights: `${exercise.totalWeight} lbs`,
+          sets: exercise.sets.length,
+          reps: exercise.sets[0].reps,
+          completed: exercise.sets.every((set) => set.completed),
+        });
+      }); // Add closing parenthesis here
+    });
+
+    setTableData(tempTableData);
+  }, [clientLogs, currentClientUid]);
 
   useMemo(() => {
     if (clientLogs === null) return;
@@ -131,14 +71,14 @@ const WorkoutTable = () => {
     getLogs(user?.trainerData?.clients ?? []);
   }, [user]);
 
-  useMemo(() => {
-    console.log(clientLogs);
-  }, [clientLogs]);
+  if (!clientLogs || !currentClientUid || !tableData || !currentClient) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={'workout-container'}>
       <div className={'center-heading'}>
-        <h2>{`${currentClientUid}'s Workout Logs`}</h2>
+        <h2>{`${currentClient.name}'s Workout Logs`}</h2>
       </div>
       <TableContainer component={Paper} className={'custom-table-container'}>
         <Table sx={{ minWidth: 650 }} aria-label="workout table">
@@ -152,7 +92,7 @@ const WorkoutTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {workoutData[selectedTrainee].map((row, index) => (
+            {tableData.map((row: any, index: any) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   {row.workoutName}
@@ -164,7 +104,7 @@ const WorkoutTable = () => {
                   {row.completed ? 'Yes' : 'No'}
                 </TableCell>
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

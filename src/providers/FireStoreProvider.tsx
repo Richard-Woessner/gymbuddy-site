@@ -29,7 +29,7 @@ interface FireStoreContextType {
   currentClient?: UserData | null;
   currentClientUid?: string;
   conversation?: Conversation[] | null;
-  clientLogs?: { client: UserData; Logs: Log[] }[];
+  clientLogs?: { clientUid: string; Logs: Log[] }[];
 
   getClients: (trainerData: Trainer) => Promise<void>;
   getMessages: (t: Trainer) => Promise<Conversation[] | null>;
@@ -82,7 +82,7 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
   const [currentClientUid, setCurrentClientUid] = useState<string>('');
   const [conversation, setConversation] = useState<Conversation[] | null>(null);
   const [clientLogs, setClientLogs] = useState<
-    { client: UserData; Logs: Log[] }[]
+    { clientUid: string; Logs: Log[] }[]
   >([]);
 
   const getClients = useCallback(async (trainerData: Trainer) => {
@@ -165,11 +165,7 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
     async (message: Message, conversation: Conversation) => {
       setIsLoading(true);
       try {
-        // Create a new message object
-
         const conv = deepCopy(conversation) as Conversation;
-
-        console.log(conv);
 
         conv.updatedAt = new Date();
 
@@ -196,15 +192,12 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
     try {
       const logs: Log[] = [];
       for (const clientId of clientIds) {
-        const q = await query(
-          collection(db, 'Logs'),
-          where('clientId', '==', clientId),
-        );
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          const log = doc.data() as Log;
-          logs.push(log);
-        });
+        const logDoc = await getDoc(doc(db, 'Logs', clientId));
+
+        const l = logDoc.data() as { Logs: Log[] };
+        console.log(l);
+        logs.push(...l.Logs);
+        setClientLogs([...clientLogs, { clientUid: clientId, Logs: l.Logs }]);
       }
       setIsLoading(false);
       return logs;

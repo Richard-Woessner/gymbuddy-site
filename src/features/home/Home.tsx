@@ -2,6 +2,7 @@ import { Grid, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
 import { useFireStore } from '../../providers/FireStoreProvider';
+import { UserData } from '../../models/User';
 
 const Home = () => {
   const auth = useAuth();
@@ -30,8 +31,8 @@ const Home = () => {
       <Grid item xs={6}>
         {hasClients ? (
           <div>
-            {clients.map((client) => (
-              <div key={client.uid}>{client.uid}</div>
+            {clients.map((client: UserData) => (
+              <div key={client.uid}>{client.name}</div>
             ))}
           </div>
         ) : (

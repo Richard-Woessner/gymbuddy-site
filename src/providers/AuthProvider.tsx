@@ -158,6 +158,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
     [],
   );
 
+  useMemo(() => {
+    login('trainer@t.com', '123456');
+  }, []);
+
   const values = useMemo(
     () => ({
       isLoading,

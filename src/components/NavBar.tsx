@@ -48,7 +48,7 @@ const Home = () => {
             >
               {clients!.map((client: UserData) => (
                 <MenuItem key={client.uid} value={client.uid}>
-                  {client.uid}
+                  {client.name}
                 </MenuItem>
               ))}
             </Select>
