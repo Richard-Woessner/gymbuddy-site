@@ -5,6 +5,8 @@ import './MyWorkout.scss';
 import { redirect, useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase/firebase';
 import { useAuth } from '../../providers/AuthProvider';
+import { useFireStore } from '../../providers/FireStoreProvider';
+import NoTrainee from '../../components/noTrainee/NoTrainee';
 
 interface WorkoutCardProps {
   workout: {
@@ -155,6 +157,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
 };
 
 const MyWorkout = () => {
+  const fs = useFireStore();
   const [isFormVisible, setFormVisible] = useState(false);
   const [workoutCards, setWorkoutCards] = useState<
     {
@@ -217,6 +220,8 @@ const MyWorkout = () => {
     console.log('auth user', auth.user);
   }, []);
   if (auth.user == null) navigate(`/auth`, { replace: true }); // <-- redirect
+
+  if (fs.currentClient == null) return <NoTrainee />;
 
   return (
     <div>

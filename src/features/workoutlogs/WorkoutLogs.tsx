@@ -11,6 +11,7 @@ import { useFireStore } from '../../providers/FireStoreProvider';
 import { useAuth } from '../../providers/AuthProvider';
 import { Log } from '../../models/Logs';
 import { UserData } from '../../models/User';
+import NoTrainee from '../../components/noTrainee/NoTrainee';
 
 type WorkoutData = {
   workoutName: string;
@@ -71,9 +72,11 @@ const WorkoutTable = () => {
     getLogs(user?.trainerData?.clients ?? []);
   }, [user]);
 
-  if (!clientLogs || !currentClientUid || !tableData || !currentClient) {
+  if (!clientLogs || !tableData) {
     return <div>Loading...</div>;
   }
+
+  if (currentClient == null) return <NoTrainee />;
 
   return (
     <div className={'workout-container'}>
