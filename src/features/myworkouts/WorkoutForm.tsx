@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './MyWorkout.scss';
+import './MyWorkout.module.scss';
 
 interface WorkoutFormProps {
   onSave: (workoutData: {

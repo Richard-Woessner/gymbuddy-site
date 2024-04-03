@@ -12,12 +12,25 @@ const Home = () => {
   const [trainee, setTrainee] = React.useState('');
   const navigate = useNavigate();
   const auth = useAuth();
-  const { clients, currentClient, currentClientUid, setCurrentClientUid } =
-    useFireStore();
+  const {
+    clients,
+    currentClient,
+    currentClientUid,
+    setCurrentClientUid,
+    setClient,
+  } = useFireStore();
 
   const hasClients = clients && clients.length > 0;
 
-  useMemo(() => {
+  const handleSelectChange = async (e: string) => {
+    const uid = e;
+    if (uid) {
+      await setCurrentClientUid(uid);
+      await setClient(uid);
+    }
+  };
+
+  useEffect(() => {
     const signupPage = window.location.href.split('/').pop() === 'sign-up';
 
     if (auth.user === null && !signupPage) {
@@ -42,11 +55,10 @@ const Home = () => {
             <Select
               labelId="trainee-dropdown"
               id="simple-select"
-              value={currentClientUid || undefined}
               label="Age"
-              onChange={(e) => setCurrentClientUid(e.target.value)}
+              onChange={(e) => handleSelectChange(e.target.value as string)}
             >
-              {clients!.map((client: UserData) => (
+              {clients?.map((client: UserData) => (
                 <MenuItem key={client.uid} value={client.uid}>
                   {client.name}
                 </MenuItem>

@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import WorkoutForm from './WorkoutForm';
-import './WorkoutCard.scss';
-import './MyWorkout.scss';
 import { redirect, useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase/firebase';
 import { useAuth } from '../../providers/AuthProvider';
 import { useFireStore } from '../../providers/FireStoreProvider';
 import NoTrainee from '../../components/noTrainee/NoTrainee';
+import Styles from './MyWorkout.module.scss';
 
 interface WorkoutCardProps {
   workout: {
@@ -217,11 +216,19 @@ const MyWorkout = () => {
   };
 
   useEffect(() => {
+    if (fs.clientWorkouts.length == 0) {
+      fs.getWorkouts().then((workouts) => {
+        console.log(workouts);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     console.log('auth user', auth.user);
   }, []);
   if (auth.user == null) navigate(`/auth`, { replace: true }); // <-- redirect
 
-  if (fs.currentClient == null) return <NoTrainee />;
+  if (fs.currentClient === null) return <NoTrainee />;
 
   return (
     <div>
@@ -233,15 +240,31 @@ const MyWorkout = () => {
         <WorkoutForm onSave={handleSaveWorkout} onClose={handleCloseForm} />
       )}
 
-      <div className="workout-cards-wrapper">
-        {workoutCards.map((card, index) => (
-          <WorkoutCard
-            key={index}
-            workout={card}
-            onEdit={(editedWorkout) => handleEditWorkout(index, editedWorkout)}
-            onDelete={() => handleDeleteWorkout(index)}
-          />
-        ))}
+      <div className={Styles.myWorkoutContainer}>
+        <div className={Styles.clientWorkouts}>
+          {fs.clientWorkouts
+            .filter((x) => x.ClientUid == fs.currentClient?.uid)[0]
+            .Workouts.map((clientWorkout, index) => {
+              return (
+                <WorkoutCard
+                  key={clientWorkout.Id}
+                  workout={{
+                    name: clientWorkout.Name,
+                    weights:
+                      clientWorkout.Exercises[0].Sets[0].Weight.toString(),
+                    reps: clientWorkout.Exercises[0].Sets[0].Reps.toString(),
+                    sets: clientWorkout.Exercises[0].Sets.length.toString(),
+                    trainee: fs.currentClient?.name || '',
+                    comment: '',
+                  }}
+                  onEdit={(editedWorkout) =>
+                    handleEditWorkout(index, editedWorkout)
+                  }
+                  onDelete={() => handleDeleteWorkout(index)}
+                />
+              );
+            })}
+        </div>
       </div>
     </div>
   );

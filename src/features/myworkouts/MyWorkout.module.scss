@@ -85,3 +85,9 @@ button {
   background-color: #88e4fc;
   border: 2px solid black;
 }
+
+.myWorkoutContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}

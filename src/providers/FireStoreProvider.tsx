@@ -22,6 +22,7 @@ import { Trainer } from '../models/Trainer';
 import User, { UserData } from '../models/User';
 import { Conversation, Message } from '../models/Messages';
 import { Log } from '../models/Logs';
+import { ClientWorkouts, Workout } from '../models/Workout';
 
 interface FireStoreContextType {
   isLoading: boolean;
@@ -30,12 +31,15 @@ interface FireStoreContextType {
   currentClientUid?: string;
   conversation?: Conversation[] | null;
   clientLogs?: { clientUid: string; Logs: Log[] }[];
+  clientWorkouts: ClientWorkouts[];
 
   getClients: (trainerData: Trainer) => Promise<void>;
   getMessages: (t: Trainer) => Promise<Conversation[] | null>;
   setCurrentClientUid: (uid: string) => void;
   sendMessage: (message: Message, conversation: Conversation) => void;
   getLogs: (clientIds: string[]) => Promise<Log[]>;
+  setClient: (uid: string) => Promise<void>;
+  getWorkouts: () => Promise<ClientWorkouts[]>;
 }
 
 const initialValues: FireStoreContextType = {
@@ -45,6 +49,7 @@ const initialValues: FireStoreContextType = {
   currentClientUid: '',
   conversation: [],
   clientLogs: [],
+  clientWorkouts: [],
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getClients: async function (trainerData: Trainer): Promise<void> {
@@ -66,6 +71,14 @@ const initialValues: FireStoreContextType = {
   getLogs: async function (clientIds: string[]): Promise<Log[]> {
     throw new Error('Function not implemented.');
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setClient: async function (uid: string): Promise<void> {
+    throw new Error('Function not implemented.');
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getWorkouts: async function (): Promise<ClientWorkouts[]> {
+    throw new Error('Function not implemented.');
+  },
 };
 
 export const FireStoreContext =
@@ -84,6 +97,7 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
   const [clientLogs, setClientLogs] = useState<
     { clientUid: string; Logs: Log[] }[]
   >([]);
+  const [clientWorkouts, setClientWorkouts] = useState<ClientWorkouts[]>([]);
 
   const getClients = useCallback(async (trainerData: Trainer) => {
     setIsLoading(true);
@@ -208,6 +222,52 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
     }
   }, []);
 
+  const getWorkouts = useCallback(async () => {
+    console.log('Getting workouts');
+
+    setIsLoading(true);
+
+    try {
+      const tempClientWorkouts: ClientWorkouts[] = [];
+
+      for (const c of clients) {
+        const clientId = c.uid;
+
+        const logDoc = await getDoc(doc(db, 'Workouts', clientId));
+
+        const l = logDoc.data() as { Workouts: Workout[] };
+        console.log(l);
+        tempClientWorkouts.push({ ClientUid: clientId, Workouts: l.Workouts });
+      }
+
+      setClientWorkouts(tempClientWorkouts);
+
+      console.log(tempClientWorkouts);
+
+      return tempClientWorkouts;
+    } catch (error) {
+      console.error('Error getting workouts:', error);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  }, [clients]);
+
+  const setClient = useCallback(
+    async (uid: string) => {
+      console.log('Setting client:', uid);
+
+      const client = clients.find((c) => c.uid === uid);
+
+      if (client) {
+        setCurrentClient(client);
+      } else {
+        console.log('Client not found');
+      }
+    },
+    [clients],
+  );
+
   const values = useMemo(
     () => ({
       isLoading,
@@ -216,12 +276,15 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       currentClient,
       currentClientUid,
       clientLogs,
+      clientWorkouts,
 
       getClients,
       getMessages,
       setCurrentClientUid,
       sendMessage,
       getLogs,
+      setClient,
+      getWorkouts,
     }),
     [
       isLoading,
@@ -230,11 +293,14 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       currentClient,
       currentClientUid,
       clientLogs,
+      clientWorkouts,
       getClients,
       getMessages,
       setCurrentClientUid,
       sendMessage,
       getLogs,
+      setClient,
+      getWorkouts,
     ],
   );
 
