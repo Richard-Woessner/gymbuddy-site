@@ -90,4 +90,8 @@ button {
   display: flex;
   flex-direction: row;
   gap: 2rem;
+
+  & > div:first-child {
+    width: 50%;
+  }
 }

@@ -10,6 +10,7 @@ export interface Workout {
   uid?: string;
   Completed?: boolean;
   Display?: boolean;
+  DateCreated?: Date;
 }
 
 export interface Exercise {

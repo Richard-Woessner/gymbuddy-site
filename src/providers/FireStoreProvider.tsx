@@ -236,7 +236,13 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
         const logDoc = await getDoc(doc(db, 'Workouts', clientId));
 
         const l = logDoc.data() as { Workouts: Workout[] };
-        console.log(l);
+
+        l.Workouts.forEach((w) => {
+          if (w.DateCreated === undefined) {
+            w.DateCreated = new Date();
+          }
+        });
+
         tempClientWorkouts.push({ ClientUid: clientId, Workouts: l.Workouts });
       }
 
