@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  Timestamp,
   collection,
   doc,
   getDoc,
@@ -40,6 +41,8 @@ interface FireStoreContextType {
   getLogs: (clientIds: string[]) => Promise<Log[]>;
   setClient: (uid: string) => Promise<void>;
   getWorkouts: () => Promise<ClientWorkouts[]>;
+  postWorkout: (workout: Workout, client: UserData) => void;
+  deleteWorkout: (workout: Workout, client: UserData) => void;
 }
 
 const initialValues: FireStoreContextType = {
@@ -77,6 +80,14 @@ const initialValues: FireStoreContextType = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getWorkouts: async function (): Promise<ClientWorkouts[]> {
+    throw new Error('Function not implemented.');
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  postWorkout: function (workout: Workout, client: UserData): void {
+    throw new Error('Function not implemented.');
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  deleteWorkout: function (workout: Workout, client: UserData): void {
     throw new Error('Function not implemented.');
   },
 };
@@ -239,7 +250,7 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
 
         l.Workouts.forEach((w) => {
           if (w.DateCreated === undefined) {
-            w.DateCreated = new Date();
+            w.DateCreated = Timestamp.now();
           }
         });
 
@@ -258,6 +269,80 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       setIsLoading(false);
     }
   }, [clients]);
+
+  const postWorkout = useCallback(
+    async (workout: Workout, client: UserData) => {
+      console.log(workout);
+
+      // add workout to clientWorkouts and post to db
+      const newWorkout = workout;
+      newWorkout.uid = randomString(20);
+      newWorkout.DateCreated = Timestamp.now();
+      newWorkout.Completed = false;
+      newWorkout.Display = true;
+
+      const tempClientWorkouts = deepCopy(clientWorkouts);
+
+      const tempSelectedWorkouts = tempClientWorkouts.find(
+        (x: ClientWorkouts) => x.ClientUid === client.uid,
+      ) as ClientWorkouts;
+
+      if (tempClientWorkouts) {
+        tempSelectedWorkouts.Workouts.push(newWorkout);
+      } else {
+        tempClientWorkouts.push({
+          ClientUid: client.uid,
+          Workouts: [newWorkout],
+        });
+      }
+
+      setClientWorkouts(tempClientWorkouts);
+
+      await setDoc(
+        doc(db, 'Workouts', client.uid),
+        {
+          User: client.name,
+          Workouts: tempSelectedWorkouts.Workouts,
+          uid: client.uid,
+        },
+        { merge: true },
+      );
+    },
+    [clientWorkouts],
+  );
+
+  const deleteWorkout = useCallback(
+    async (workout: Workout, client: UserData) => {
+      console.log(workout);
+
+      const tempClientWorkouts = deepCopy(clientWorkouts);
+
+      const tempSelectedWorkouts = tempClientWorkouts.find(
+        (x: ClientWorkouts) => x.ClientUid === client.uid,
+      ) as ClientWorkouts;
+
+      if (tempSelectedWorkouts) {
+        const index = tempSelectedWorkouts.Workouts.findIndex(
+          (x) => x.uid === workout.uid,
+        );
+
+        tempSelectedWorkouts.Workouts.splice(index, 1);
+
+        setClientWorkouts(tempClientWorkouts);
+
+        await setDoc(
+          doc(db, 'Workouts', client.uid),
+          {
+            User: client.name,
+            Workouts: tempSelectedWorkouts.Workouts,
+            uid: client.uid,
+          },
+          { merge: true },
+        );
+      }
+    },
+    [clientWorkouts],
+  );
 
   const setClient = useCallback(
     async (uid: string) => {
@@ -291,6 +376,8 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       getLogs,
       setClient,
       getWorkouts,
+      postWorkout,
+      deleteWorkout,
     }),
     [
       isLoading,
@@ -307,6 +394,8 @@ export const FireStoreProvider = (props: FireStoreProviderProps) => {
       getLogs,
       setClient,
       getWorkouts,
+      postWorkout,
+      deleteWorkout,
     ],
   );
 

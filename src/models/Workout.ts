@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface ClientWorkouts {
   ClientUid: string;
   Workouts: Workout[];
@@ -10,7 +12,7 @@ export interface Workout {
   uid?: string;
   Completed?: boolean;
   Display?: boolean;
-  DateCreated?: Date;
+  DateCreated?: Timestamp;
 }
 
 export interface Exercise {

@@ -7,26 +7,10 @@ import { useFireStore } from '../../providers/FireStoreProvider';
 import NoTrainee from '../../components/noTrainee/NoTrainee';
 import Styles from './MyWorkout.module.scss';
 import WorkoutCard from '../../components/workoutCard/WorkoutCard';
-
-interface WorkoutCardProps {
-  workout: {
-    name: string;
-    weights: string;
-    sets: string;
-    reps: string;
-    trainee: string;
-    comment: string;
-  };
-  onEdit: (editedWorkout: {
-    name: string;
-    weights: string;
-    sets: string;
-    reps: string;
-    trainee: string;
-    comment: string;
-  }) => void;
-  onDelete: () => void;
-}
+import WorkoutBuilder from '../../components/workoutBuilder/WorkoutBuilder';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Container } from '@mui/system';
+import { Button } from '@mui/material';
 
 const MyWorkout = () => {
   const fs = useFireStore();
@@ -101,28 +85,34 @@ const MyWorkout = () => {
   }, []);
   if (auth.user == null) navigate(`/auth`, { replace: true }); // <-- redirect
 
-  if (fs.currentClient === null) return <NoTrainee />;
+  if (fs.currentClient === null || fs.currentClient === undefined)
+    return <NoTrainee />;
 
   return (
-    <div>
-      <button className="create-workout-button" onClick={handleCreateWorkout}>
-        Create Workout
-      </button>
+    <Container>
+      <Button onClick={handleCreateWorkout}>Create Workout</Button>
 
       {isFormVisible && (
         <WorkoutForm onSave={handleSaveWorkout} onClose={handleCloseForm} />
       )}
 
-      <div className={Styles.myWorkoutContainer}>
-        <div className={Styles.clientWorkouts}>
+      <Grid container spacing={3}>
+        <Grid container xs={8} md={9}>
+          <WorkoutBuilder client={fs.currentClient} />
+        </Grid>
+        <Grid container direction={'column'} xs={4} md={3}>
           {fs.clientWorkouts
             .filter((x) => x.ClientUid == fs.currentClient?.uid)[0]
-            .Workouts.map((clientWorkout, index) => {
-              return <WorkoutCard workout={clientWorkout} key={index} />;
+            .Workouts?.map((clientWorkout, index) => {
+              return (
+                <Grid key={index}>
+                  <WorkoutCard workout={clientWorkout} key={index} />
+                </Grid>
+              );
             })}
-        </div>
-      </div>
-    </div>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

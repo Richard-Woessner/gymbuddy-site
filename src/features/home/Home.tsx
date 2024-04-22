@@ -29,6 +29,15 @@ const Home = () => {
         <div>Welcome to GymBuddy</div>
       </Grid>
       <Grid item xs={6}>
+        <Typography variant="h4" gutterBottom>
+          Add Clients today
+        </Typography>
+
+        <Typography>
+          Tell your clients to download the GymBuddy app and enter your code{' '}
+          <Typography variant="h6">#{code}</Typography>
+          <br />
+        </Typography>
         {hasClients ? (
           <div>
             {clients.map((client: UserData) => (
@@ -36,16 +45,7 @@ const Home = () => {
             ))}
           </div>
         ) : (
-          <>
-            <Typography variant="h4" gutterBottom>
-              Find Clients today
-            </Typography>
-
-            <Typography>
-              Tell your clients to download the GymBuddy app and enter your code{' '}
-              <Typography variant="h6">#{code}</Typography>
-            </Typography>
-          </>
+          <></>
         )}
       </Grid>
     </Grid>

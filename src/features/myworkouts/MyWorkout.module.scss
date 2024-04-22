@@ -89,9 +89,9 @@ button {
 .myWorkoutContainer {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+}
 
-  & > div:first-child {
-    width: 50%;
-  }
+.clientWorkouts {
+  max-width: 30%;
+  width: 100%;
 }
